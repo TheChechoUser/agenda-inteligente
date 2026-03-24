@@ -1,61 +1,39 @@
+/* =========================
+   BASE
+========================= */
+html, body {
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =========================
+   HEADER
+========================= */
 .header {
   position: relative;
   padding: 20px 24px;
   border-radius: 16px;
   margin-bottom: 24px;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #000000;
-
+  color: #000;
   backdrop-filter: blur(10px);
-
   box-shadow: 
     0 10px 25px rgba(221, 0, 0, 0.3),
     inset 0 1px 0 #831521;
   overflow: hidden;
-}
-h1 {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-}
-
-h2 {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-p {
-  font-size: 14px;
-  font-weight: 400;
-  opacity: 0.85;
-}
-
-html, body {
-  font-family: 'Inter', sans-serif;
+  transition: 0.25s ease;
 }
 
 .header:hover {
   transform: translateY(-2px);
-  transition: 0.25s ease;
-
   box-shadow: 
     0 14px 35px rgba(0,0,0,0.4),
     inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
-@media (max-width: 768px) {
-  .header {
-    padding: 16px;
-  }
-
-  .header h1 {
-    font-size: 18px;
-  }
-
-  .header p {
-    font-size: 12px;
-  }
-}
 .header h1 {
   font-size: 22px;
   font-weight: 600;
@@ -75,25 +53,26 @@ html, body {
   left: -30%;
   width: 200%;
   height: 200%;
-
-  background: radial-gradient(
-    circle,
-    #831521 0%,
-    transparent 60%
-  );
-
+  background: radial-gradient(circle, #831521 0%, transparent 60%);
   transform: rotate(25deg);
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  margin: 20px;
-  color: var(--text);
+/* =========================
+   TEXTOS
+========================= */
+h2 {
+  font-size: 18px;
+  font-weight: 500;
 }
 
+p {
+  font-size: 14px;
+  opacity: 0.85;
+}
 
-/* FORM */
+/* =========================
+   FORMULARIO
+========================= */
 .form-container {
   display: flex;
   gap: 10px;
@@ -107,7 +86,7 @@ input {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid var(--border);
-  background: #0f172a;
+  background: #831521;
   color: white;
 }
 
@@ -125,79 +104,102 @@ button:hover {
   background: #921725;
 }
 
-/* CALENDARIO */
+/* =========================
+   CALENDARIO HEADER
+========================= */
 .calendar-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-
-  background:  #7f1d1d;
+  background: #7f1d1d;
   padding: 12px 8px;
-
   border-radius: 12px;
   margin-bottom: 8px;
-
   text-align: center;
   font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.5px;
-
-  color: #e2e2e2;
-
+  color: #ffffff;
   box-shadow: 
     0 4px 12px rgba(0,0,0,0.25),
     inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
+/* =========================
+   GRID CALENDARIO
+========================= */
 .grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr);
   gap: 8px;
-
-  height: 70vh;
+  min-height: 60vh;
 }
 
+/* =========================
+   DÍA
+========================= */
 .day {
   border: 1px solid #e2e2e2;
   background: #ffffff;
-  border-radius: 4px;
-  padding: 4px;
+  border-radius: 6px;
+  padding: 6px;
 
   display: flex;
   flex-direction: column;
   gap: 4px;
 
   min-height: 100px;
-  height: 100%;
 
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
+
 .day:hover {
   background: #921725;
   cursor: pointer;
 }
 
+/* Número del día */
 .numero {
   font-size: 18px;
   font-weight: 600;
-  color: #000000;
+  color: #000;
 }
 
-/* EVENTOS */
+/* =========================
+   EVENTOS
+========================= */
 .evento {
   background: var(--secondary);
   color: black;
   padding: 4px 6px;
-  border-radius: 6px , black; 
-  font-size: 15px;
+  border-radius: 6px;
+  font-size: 13px;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
   cursor: pointer;
   transition: 0.2s;
 }
 
-/* MODAL */
+.evento:hover {
+  transform: scale(1.02);
+}
+
+/* =========================
+   HOY
+========================= */
+.today {
+  border: 2px solid #C42E2E;
+  box-shadow: 0 0 8px #831521;
+}
+
+/* =========================
+   MODAL
+========================= */
 .modal {
   position: fixed;
   top: 0;
@@ -206,9 +208,11 @@ button:hover {
   height: 100%;
   background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(6px);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 9999;
 }
 
@@ -218,12 +222,17 @@ button:hover {
   color: #0f172a;
   padding: 24px;
   border-radius: 16px;
-  width: 340px;
+
+  width: 90%;
+  max-width: 400px;
+
   box-shadow:
     0 20px 60px #831521,
     inset 0 1px 0 #C42E2E;
+
   animation: modalIn 0.25s ease;
 }
+
 @keyframes modalIn {
   from {
     opacity: 0;
@@ -234,15 +243,74 @@ button:hover {
     transform: translateY(0) scale(1);
   }
 }
-.today {
-  border: 2px solid #C42E2E;
-  box-shadow: 0 0 8px #831521;
-}
-.evento:hover {
-  transform: scale(1.02);
+
+/* =========================
+   RESPONSIVE TABLET
+========================= */
+@media (max-width: 768px) {
+
+  .header {
+    padding: 16px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  .form-container {
+    flex-direction: column;
+  }
+
+  input, button {
+    width: 100%;
+  }
+
+  .calendar-header {
+    display: none;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .day {
+    min-height: 80px;
+  }
+
+  .numero {
+    font-size: 14px;
+  }
+
+  .evento {
+    font-size: 12px;
+  }
+
+  /* Quitar hover en móvil */
+  .day:hover {
+    background: #ffffff;
+  }
 }
 
+/* =========================
+   RESPONSIVE MOBILE
+========================= */
+@media (max-width: 480px) {
 
-.day {
-  overflow-y: auto;
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .day {
+    min-height: auto;
+    padding: 10px;
+  }
+
+  .modal-content {
+    padding: 16px;
+    border-radius: 12px;
+  }
 }
