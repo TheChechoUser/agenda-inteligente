@@ -1,12 +1,23 @@
-<h2>Agenda Inteligente</h2>
+<header class="header">
+  <h1>Agenda Inteligente</h1>
+  <p>Organiza tus eventos de forma eficiente</p>
+</header>
 
-<app-evento-form (actualizado)="generarCalendario()"></app-evento-form>
-
-<hr>
+<div class="form-container">
+  <app-evento-form (actualizado)="refresh()"></app-evento-form>
+</div>
 
 <div class="calendar">
 
-  <div class="header">
+  
+  <div class="calendar-nav">
+    <button (click)="mesAnterior()">←</button>
+    <h2>{{ fechaActual | date:'MMMM yyyy' }}</h2>
+    <button (click)="siguienteMes()">→</button>
+  </div>
+
+  <!-- Días de la semana -->
+  <div class="calendar-header">
     <div>LUNES</div>
     <div>MARTES</div>
     <div>MIÉRCOLES</div>
@@ -16,38 +27,48 @@
     <div>DOMINGO</div>
   </div>
 
+  <!-- Grid calendario -->
   <div class="grid">
-    @for (dia of calendario; track dia.fecha) {
-      <div class="day">
-        <div class="numero">{{ dia.numero }}</div>
+    @for (dia of calendario; track $index) {
+      
+      <div class="day" [class.today]="dia.fecha && esHoy(dia.fecha)">
 
-        @for (evento of dia.eventos; track evento.id) {
-          <div class="evento" (click)="verDetalle(evento)">
-            {{ evento.titulo }}
-          </div>
+        @if (dia.numero) {
+          
+          <div class="numero">{{ dia.numero }}</div>
+
+          @for (evento of dia.eventos; track evento.id) {
+            <div class="evento" (click)="verDetalle(evento)">
+              {{ evento.hora }} - {{ evento.titulo }}
+            </div>
+          }
+
         }
 
       </div>
+
     }
   </div>
 
 </div>
 
+<!-- Modal -->
 @if (eventoSeleccionado) {
   <div class="modal">
     <div class="modal-content">
 
+      <span class="close" (click)="cerrarDetalle()">✖</span>
+
       @if (!modoEdicion) {
 
-        <h3>{{eventoSeleccionado.titulo}}</h3>
+        <h3>{{ eventoSeleccionado.titulo }}</h3>
 
-        <p><strong>Descripción:</strong> {{eventoSeleccionado.descripcion}}</p>
-        <p><strong>Fecha:</strong> {{eventoSeleccionado.fecha}}</p>
-        <p><strong>Hora:</strong> {{eventoSeleccionado.hora}}</p>
+        <p><strong>Descripción:</strong> {{ eventoSeleccionado.descripcion }}</p>
+        <p><strong>Fecha:</strong> {{ eventoSeleccionado.fecha }}</p>
+        <p><strong>Hora:</strong> {{ eventoSeleccionado.hora }}</p>
 
         <button (click)="editarEvento(eventoSeleccionado)">Editar</button>
         <button (click)="eliminarDesdeModal()">Eliminar</button>
-        <button (click)="cerrarDetalle()">Cerrar</button>
 
       } @else {
 

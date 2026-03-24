@@ -1,60 +1,61 @@
-body {
-  font-family: Arial , sans-serif , sans-serif;
-  background: #000000;
-  margin: 20px;
-}
-
-h2 {
-  color: #B02929;
-}
-
-h3 {
-  margin-top: 20px;
-}
-
-input, button {
-  margin: 5px;
-  padding: 6px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background: #B02929;
-  color: #E5F1EC;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #B02929;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: #B02929;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 5px;
+/* CONTENEDOR HORIZONTAL */
+.form {
   display: flex;
-  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.event-card {
-  background: var(--color-surface);
-  border-left: 4px solid var(--color-primary);
-  padding: 6px 8px;
-  border-radius: var(--radius);
+/* CADA CAMPO */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 180px;
+  position: relative;
+}
+
+/* RESERVA ESPACIO PARA ERRORES */
+.error-container {
+  min-height: 14px;
+}
+
+/* LABEL */
+label {
   font-size: 12px;
-  cursor: pointer;
-  transition: all .2s ease;
+  opacity: 0.8;
 }
 
-.event-card:hover {
-  transform: scale(1.02);
-  background: #334155;
+/* INPUT */
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #f8e9e9;
+  color: black;
 }
+
+/* ERROR */
+.error {
+  color: #b91c1c;
+  font-size: 11px;
+}
+
+/* BOTÓN */
+button {
+  height: 36px;
+  align-self: flex-end;
+}
+
+/* INVALID */
+input.ng-invalid.ng-touched {
+  border: 1px solid #ff0000;
+}
+
+/* DISABLED */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

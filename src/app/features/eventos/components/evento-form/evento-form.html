@@ -1,24 +1,46 @@
-<h3>Nuevo Evento</h3>
+<h3 class="form-title">Nuevo Evento</h3>
 
-<form [formGroup]="form" (ngSubmit)="guardar()">
+<form [formGroup]="form" (ngSubmit)="guardar()" class="form">
 
-  <input placeholder="Título" formControlName="titulo">
+  <!-- Título -->
+  
+  <div class="form-group">
+    <label>Título</label>
+    <input formControlName="titulo" placeholder="Ej: Reunión importante">
+    
+    @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+      <small class="error">El título es obligatorio</small>
+    }
+  </div>
 
-  @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
-    <div style="color:red">Título obligatorio</div>
-  }
+  <!-- Descripción -->
+  <div class="form-group">
+    <label>Descripción</label>
+    <input formControlName="descripcion" placeholder="Detalles del evento">
+  </div>
 
-  <input placeholder="Descripción" formControlName="descripcion">
+  <!-- Fecha -->
+  <div class="form-group">
+    <label>Fecha</label>
+    <input type="date" formControlName="fecha">
+    
+    @if (form.get('fecha')?.invalid && form.get('fecha')?.touched) {
+      <small class="error">La fecha es obligatoria</small>
+    }
+  </div>
 
-  <input type="date" formControlName="fecha">
-  @if (form.get('fecha')?.invalid && form.get('fecha')?.touched) {
-    <div>Fecha obligatoria</div>
-  }
+  <!-- Hora -->
+  <div class="form-group">
+    <label>Hora</label>
+    <input type="time" formControlName="hora">
+    
+    @if (form.get('hora')?.invalid && form.get('hora')?.touched) {
+      <small class="error">La hora es obligatoria</small>
+    }
+  </div>
 
-  <input type="time" formControlName="hora">
-  @if (form.get('hora')?.invalid && form.get('hora')?.touched) {
-    <div>Hora obligatoria</div>
-  }
+  <button type="submit" [disabled]="form.invalid">
+    Guardar evento
+  </button>
 
-  <button type="submit">Guardar</button>
 </form>

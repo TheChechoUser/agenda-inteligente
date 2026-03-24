@@ -67,10 +67,13 @@ verificarEventosProximos() {
   const ahora = new Date();
 
   eventos.forEach(e => {
-    const fechaEvento = new Date(`${e.fecha}T${e.hora}`);
+    const [year, month, day] = e.fecha.split('-').map(Number);
+    const [hours, minutes] = e.hora.split(':').map(Number);
+
+    const fechaEvento = new Date(year, month - 1, day, hours, minutes);
+
     const diff = fechaEvento.getTime() - ahora.getTime();
 
-    
     if (diff > 0 && diff < 60000) {
       this.mostrarNotificacion(
         'Evento próximo',
@@ -79,5 +82,4 @@ verificarEventosProximos() {
     }
   });
 }
-
 }

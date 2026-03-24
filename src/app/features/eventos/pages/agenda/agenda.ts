@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Evento } from '../../models/evento';
 import { EventoFormComponent } from "../../components/evento-form/evento-form";
 import { FormsModule } from '@angular/forms';
-
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-agenda',
-  imports: [EventoFormComponent, FormsModule],
+  imports: [EventoFormComponent, FormsModule, DatePipe],
   templateUrl: './agenda.html',
   styleUrl: './agenda.css',
 })
@@ -18,45 +18,57 @@ export class Agenda implements OnInit {
   modoEdicion: boolean = false;
   eventoEditando: any = null;
 
+  calendario: any[] = [];
+  fechaActual = new Date();
+
   constructor(private eventosService: EventosService) { }
 
   ngOnInit(): void {
     this.loadEventos();
     this.generarCalendario();
-      this.solicitarPermisoNotificaciones();
+    this.solicitarPermisoNotificaciones();
   }
 
-
-
-
-solicitarPermisoNotificaciones() {
-  if ('Notification' in window) {
-    Notification.requestPermission().then(permission => {
-      console.log('Permiso:', permission);
-    });
+  esHoy(fecha: Date): boolean {
+    const hoy = new Date();
+    return (
+      hoy.getFullYear() === fecha.getFullYear() &&
+      hoy.getMonth() === fecha.getMonth() &&
+      hoy.getDate() === fecha.getDate()
+    );
   }
-}
 
+  solicitarPermisoNotificaciones() {
+    if ('Notification' in window) {
+      Notification.requestPermission();
+    }
+  }
 
   loadEventos() {
     const eventos = this.eventosService.getEventos();
 
     this.eventos = eventos.sort((a, b) => {
-      const fechaA = new Date(`${a.fecha}T${a.hora}`);
-      const fechaB = new Date(`${b.fecha}T${b.hora}`);
+      const [yA, mA, dA] = a.fecha.split('-').map(Number);
+      const [hA, minA] = a.hora.split(':').map(Number);
+
+      const [yB, mB, dB] = b.fecha.split('-').map(Number);
+      const [hB, minB] = b.hora.split(':').map(Number);
+
+      const fechaA = new Date(yA, mA - 1, dA, hA, minA);
+      const fechaB = new Date(yB, mB - 1, dB, hB, minB);
       return fechaA.getTime() - fechaB.getTime();
     });
   }
 
   eliminar(id: number) {
     this.eventosService.deleteEvento(id);
-    this.loadEventos();
+    this.refresh();
   }
 
   filtrarEventos() {
     const eventos = this.eventosService.getEventos();
 
-    if (!this.fechaFiltro || this.fechaFiltro.trim() === '') {
+    if (!this.fechaFiltro) {
       this.loadEventos();
       return;
     }
@@ -64,78 +76,128 @@ solicitarPermisoNotificaciones() {
     this.eventos = eventos
       .filter(e => e.fecha === this.fechaFiltro)
       .sort((a, b) => {
-        const fechaA = new Date(`${a.fecha}T${a.hora}`);
-        const fechaB = new Date(`${b.fecha}T${b.hora}`);
+        const [yA, mA, dA] = a.fecha.split('-').map(Number);
+        const [hA, minA] = a.hora.split(':').map(Number);
+
+        const [yB, mB, dB] = b.fecha.split('-').map(Number);
+        const [hB, minB] = b.hora.split(':').map(Number);
+
+        const fechaA = new Date(yA, mA - 1, dA, hA, minA);
+        const fechaB = new Date(yB, mB - 1, dB, hB, minB);
         return fechaA.getTime() - fechaB.getTime();
       });
-
-
   }
-  
-  editarEvento(evento: any) {
-  this.modoEdicion = true;
-  this.eventoEditando = { ...evento }; 
-}
-
-guardarEdicion() {
-  this.eventosService.updateEvento(this.eventoEditando);
-  this.cerrarDetalle();
-  this.generarCalendario();
-}
-
-eliminarDesdeModal() {
-  this.eventosService.deleteEvento(this.eventoSeleccionado.id);
-  this.cerrarDetalle();
-  this.generarCalendario();
-}
-
-cerrarDetalle() {
-  this.eventoSeleccionado = null;
-  this.modoEdicion = false;
-  this.eventoEditando = null;
-}
-
 
   limpiarFiltro() {
     this.fechaFiltro = '';
     this.loadEventos();
   }
 
-  calendario: any[] = [];
+  editarEvento(evento: any) {
+    this.modoEdicion = true;
+    this.eventoEditando = { ...evento };
+  }
 
-  generarCalendario() {
-    const eventos = this.eventosService.getEventos();
+  guardarEdicion() {
+    this.eventosService.updateEvento(this.eventoEditando);
+    this.cerrarDetalle();
+    this.refresh();
+  }
 
-    const hoy = new Date();
-    const año = hoy.getFullYear();
-    const mes = hoy.getMonth();
+  eliminarDesdeModal() {
+    this.eventosService.deleteEvento(this.eventoSeleccionado.id);
+    this.cerrarDetalle();
+    this.refresh();
+  }
 
-    const primerDia = new Date(año, mes, 1);
-    const ultimoDia = new Date(año, mes + 1, 0);
-
-    const diasMes = ultimoDia.getDate();
-
-    const dias: any[] = [];
-
-    for (let i = 1; i <= diasMes; i++) {
-      const fecha = `${año}-${String(mes + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-
-      const eventosDelDia = eventos.filter(e => e.fecha === fecha);
-
-      dias.push({
-        numero: i,
-        fecha: fecha,
-        eventos: eventosDelDia
-      });
-    }
-
-    this.calendario = dias;
+  cerrarDetalle() {
+    this.eventoSeleccionado = null;
+    this.modoEdicion = false;
+    this.eventoEditando = null;
   }
 
   verDetalle(evento: any) {
     this.eventoSeleccionado = evento;
   }
 
+  refresh() {
+    this.loadEventos();
+    this.generarCalendario();
+  }
 
- 
+
+  generarCalendario() {
+    const eventos = this.eventosService.getEventos();
+
+    const año = this.fechaActual.getFullYear();
+    const mes = this.fechaActual.getMonth();
+
+    const primerDia = new Date(año, mes, 1);
+    const ultimoDia = new Date(año, mes + 1, 0);
+    const diasMes = ultimoDia.getDate();
+
+    let inicioSemana = primerDia.getDay();
+    inicioSemana = inicioSemana === 0 ? 6 : inicioSemana - 1;
+
+    const dias: any[] = [];
+
+    for (let i = 0; i < inicioSemana; i++) {
+      dias.push({
+        numero: '',
+        fecha: null,
+        eventos: []
+      });
+    }
+
+
+    for (let i = 1; i <= diasMes; i++) {
+      const fechaObj = new Date(año, mes, i);
+
+      const eventosDelDia = eventos.filter(e => {
+        const [year, month, day] = e.fecha.split('-').map(Number);
+        const f = new Date(year, month - 1, day);
+
+        return (
+          f.getFullYear() === fechaObj.getFullYear() &&
+          f.getMonth() === fechaObj.getMonth() &&
+          f.getDate() === fechaObj.getDate()
+        );
+      });
+
+      dias.push({
+        numero: i,
+        fecha: fechaObj,
+        eventos: eventosDelDia
+      });
+    }
+
+    this.calendario = [...dias];
+
+    while (dias.length < 42) {
+  dias.push({
+    numero: '',
+    fecha: null,
+    eventos: []
+  });
+}
+  }
+  siguienteMes() {
+    this.fechaActual = new Date(
+      this.fechaActual.getFullYear(),
+      this.fechaActual.getMonth() + 1,
+      1
+    );
+    this.generarCalendario();
+  }
+
+  mesAnterior() {
+    this.fechaActual = new Date(
+      this.fechaActual.getFullYear(),
+      this.fechaActual.getMonth() - 1,
+      1
+    );
+    this.generarCalendario();
+  }
+
+  
 }
