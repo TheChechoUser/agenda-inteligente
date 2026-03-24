@@ -1,0 +1,87 @@
+body {
+  font-family: Arial, sans-serif , sans-serif;
+  background: #bd1919;
+  margin: 20px;
+}
+
+h2 {
+  color: #2c3e50;
+}
+
+input, button {
+  margin: 5px;
+  padding: 6px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: rgb(0, 0, 0);
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+.calendar {
+  margin-top: 20px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #921725;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  color: #E5F1EC;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.day {
+  border: 1px solid #474747;
+  min-height: 100px;
+  padding: 5px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+.numero {
+  font-weight: bold , sans-serif ;
+  margin-bottom: 5px;
+}
+
+.evento {
+  background: #921725;
+  color: white;
+  padding: 3px;
+  margin: 2px 0;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}

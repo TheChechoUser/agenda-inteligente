@@ -1,0 +1,24 @@
+<h3>Nuevo Evento</h3>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+
+  <input placeholder="Título" formControlName="titulo">
+
+  @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+    <div style="color:red">Título obligatorio</div>
+  }
+
+  <input placeholder="Descripción" formControlName="descripcion">
+
+  <input type="date" formControlName="fecha">
+  @if (form.get('fecha')?.invalid && form.get('fecha')?.touched) {
+    <div>Fecha obligatoria</div>
+  }
+
+  <input type="time" formControlName="hora">
+  @if (form.get('hora')?.invalid && form.get('hora')?.touched) {
+    <div>Hora obligatoria</div>
+  }
+
+  <button type="submit">Guardar</button>
+</form>

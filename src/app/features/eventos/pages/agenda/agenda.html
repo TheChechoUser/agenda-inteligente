@@ -1,0 +1,68 @@
+<h2>Agenda Inteligente</h2>
+
+<app-evento-form (actualizado)="generarCalendario()"></app-evento-form>
+
+<hr>
+
+<div class="calendar">
+
+  <div class="header">
+    <div>LUNES</div>
+    <div>MARTES</div>
+    <div>MIÉRCOLES</div>
+    <div>JUEVES</div>
+    <div>VIERNES</div>
+    <div>SÁBADO</div>
+    <div>DOMINGO</div>
+  </div>
+
+  <div class="grid">
+    @for (dia of calendario; track dia.fecha) {
+      <div class="day">
+        <div class="numero">{{ dia.numero }}</div>
+
+        @for (evento of dia.eventos; track evento.id) {
+          <div class="evento" (click)="verDetalle(evento)">
+            {{ evento.titulo }}
+          </div>
+        }
+
+      </div>
+    }
+  </div>
+
+</div>
+
+@if (eventoSeleccionado) {
+  <div class="modal">
+    <div class="modal-content">
+
+      @if (!modoEdicion) {
+
+        <h3>{{eventoSeleccionado.titulo}}</h3>
+
+        <p><strong>Descripción:</strong> {{eventoSeleccionado.descripcion}}</p>
+        <p><strong>Fecha:</strong> {{eventoSeleccionado.fecha}}</p>
+        <p><strong>Hora:</strong> {{eventoSeleccionado.hora}}</p>
+
+        <button (click)="editarEvento(eventoSeleccionado)">Editar</button>
+        <button (click)="eliminarDesdeModal()">Eliminar</button>
+        <button (click)="cerrarDetalle()">Cerrar</button>
+
+      } @else {
+
+        <h3>Editar Evento</h3>
+
+        <input [(ngModel)]="eventoEditando.titulo" placeholder="Título">
+        <input [(ngModel)]="eventoEditando.descripcion" placeholder="Descripción">
+        <input type="date" [(ngModel)]="eventoEditando.fecha">
+        <input type="time" [(ngModel)]="eventoEditando.hora">
+
+        <button (click)="guardarEdicion()">Guardar cambios</button>
+        <button (click)="cerrarDetalle()">Cancelar</button>
+
+      }
+
+    </div>
+  </div>
+}
